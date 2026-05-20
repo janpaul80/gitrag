@@ -169,7 +169,7 @@ function prefixGitignorePattern(prefix: string, pattern: string): string {
   return `${prefix}**/${pattern}`;
 }
 
-function detectLanguage(filePath: string): string {
+export function detectLanguage(filePath: string): string {
   const extension = filePath.match(/\.[^.\/]+$/)?.[0]?.toLowerCase();
   return extension ? (languageByExtension.get(extension) ?? extension.slice(1)) : "text";
 }

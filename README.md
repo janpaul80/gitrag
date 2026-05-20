@@ -123,6 +123,7 @@ GitRAG keeps browser traffic credential-free. The web app sends chat and reposit
 gitrag --help
 gitrag doctor
 gitrag sanitize ./my-repo
+gitrag sync ./my-repo --collection collection_123
 ```
 
 The first release will ship source installation. The public package roadmap targets:

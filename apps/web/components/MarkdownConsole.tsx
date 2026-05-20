@@ -15,7 +15,7 @@ const initialMessages: StreamMessage[] = [
   }
 ];
 
-export function MarkdownConsole() {
+export function MarkdownConsole({ enabled }: { enabled: boolean }) {
   const [messages, setMessages] = useState<StreamMessage[]>(initialMessages);
   const [answer, setAnswer] = useState(
     "GitRAG keeps gateway credentials inside `apps/server`. Browser requests carry repo intent and chat payloads only; the relay injects the Enterprise AI Gateway key server-side."
@@ -24,6 +24,10 @@ export function MarkdownConsole() {
   const [isStreaming, setIsStreaming] = useState(false);
 
   async function submitPrompt() {
+    if (!enabled) {
+      return;
+    }
+
     const nextMessages: StreamMessage[] = [...messages, { role: "user", content: prompt }];
     setMessages(nextMessages);
     setAnswer("");
@@ -77,6 +81,7 @@ export function MarkdownConsole() {
           <span className="text-cyan-300">&gt;</span>
           <input
             className="min-w-0 flex-1 bg-transparent outline-none"
+            disabled={!enabled}
             value={prompt}
             onChange={(event) => setPrompt(event.target.value)}
             onKeyDown={(event) => {
@@ -87,7 +92,7 @@ export function MarkdownConsole() {
           />
           <button
             className="rounded border border-cyan-400/30 px-3 py-1 text-cyan-200 disabled:opacity-50"
-            disabled={isStreaming}
+            disabled={isStreaming || !enabled}
             onClick={() => void submitPrompt()}
           >
             send

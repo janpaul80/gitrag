@@ -74,16 +74,92 @@ Error responses:
 }
 ```
 
+### `POST /v1/collections/:collectionId/files`
+
+Uploads sanitized source artifacts to an upstream gateway collection through a provider-neutral multipart relay.
+
+Request content type:
+
+```http
+multipart/form-data
+```
+
+Required form fields:
+
+```text
+manifest: JSON string
+files: one or more source file blobs
+```
+
+Manifest shape:
+
+```json
+{
+  "totalFiles": 2,
+  "files": [
+    {
+      "path": "src/index.ts",
+      "language": "typescript"
+    },
+    {
+      "path": "README.md",
+      "language": "markdown"
+    }
+  ]
+}
+```
+
+Server behavior:
+
+```text
+multipart request
+  -> validate server gateway credential
+  -> parse manifest and file parts
+  -> preserve repository-relative paths from manifest metadata
+  -> upload files to the upstream collection endpoint with concurrency limit 5
+  -> attach path, language, and metadata to every upstream payload
+```
+
+Response:
+
+```json
+{
+  "collectionId": "collection_123",
+  "uploaded": 2,
+  "failed": 0,
+  "files": [
+    {
+      "filePath": "src/index.ts",
+      "status": 202,
+      "ok": true
+    }
+  ]
+}
+```
+
+## CLI Contract
+
+```bash
+gitrag sync <local-path> --collection <collectionId>
+```
+
+CLI behavior:
+
+```text
+local path
+  -> verify path exists
+  -> verify GITRAG_CORE_GATEWAY_KEY is readable from the host shell
+  -> run @gitrag/sanitizer packRepository()
+  -> post multipart files to http://localhost:8787/v1/collections/:collectionId/files
+  -> print one terminal progress line per queued source file
+```
+
 ## Planned Route Extensions
 
 ### `POST /v1/repositories/sanitize`
 
 Accepts a local path or uploaded file manifest and returns the sanitizer inclusion plan. This route should call `@gitrag/sanitizer` and never forward ignored files to the upstream gateway.
 
-### `POST /v1/collections/:collectionId/files`
-
-Uploads sanitized source artifacts to an upstream gateway collection. The exact upstream shape should be finalized against the gateway schema before implementation.
-
 ### `POST /v1/chat/stream`
 
-UI-optimized alias that accepts repo context plus messages, resolves the active Knowledge Folder, and streams Markdown/code/citation output back to the custom chat console.
+UI-optimized alias that accepts repo context plus messages, resolves the active collection, and streams Markdown/code/citation output back to the custom chat console.
