@@ -3,9 +3,9 @@ export type StreamMessage = {
   content: string;
 };
 
-export type StreamKnowledgeFolderQueryInput = {
+export type StreamCollectionQueryInput = {
   serverUrl: string;
-  folderId: string;
+  collectionId: string;
   messages: StreamMessage[];
   repository?: {
     name: string;
@@ -15,9 +15,9 @@ export type StreamKnowledgeFolderQueryInput = {
   onToken: (token: string) => void;
 };
 
-export async function streamKnowledgeFolderQuery(input: StreamKnowledgeFolderQueryInput): Promise<void> {
+export async function streamCollectionQuery(input: StreamCollectionQueryInput): Promise<void> {
   const response = await fetch(
-    `${input.serverUrl.replace(/\/$/, "")}/v1/knowledge-folders/${encodeURIComponent(input.folderId)}/query`,
+    `${input.serverUrl.replace(/\/$/, "")}/v1/collections/${encodeURIComponent(input.collectionId)}/query`,
     {
       method: "POST",
       headers: {

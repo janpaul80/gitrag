@@ -5,7 +5,7 @@
 <h1 align="center">GitRAG</h1>
 
 <p align="center">
-  Open-source repo oracle for developer teams, powered by Langdock enterprise RAG.
+  Open-source repo oracle for developer teams, powered by a secure, compliance-ready Enterprise AI Gateway Integration.
 </p>
 
 <p align="center">
@@ -16,9 +16,9 @@
 
 ## What GitRAG Is
 
-GitRAG turns a local or remote source repository into a safe, queryable context layer for Langdock coding models. It crawls a repo, removes noisy or unsafe files, sends sanitized code context through a server-side Langdock relay, and renders answers in an IDE-style chat console.
+GitRAG turns a local or remote source repository into a safe, queryable context layer for Enterprise AI Gateway-backed coding models. It crawls a repo, removes noisy or unsafe files, sends sanitized code context through a server-side gateway relay, and renders answers in an IDE-style chat console.
 
-The browser never receives your Langdock Workspace API key.
+The browser never receives your Enterprise AI Gateway key.
 
 ## Repository Layout
 
@@ -26,7 +26,7 @@ The browser never receives your Langdock Workspace API key.
 git-rag/
 ├── apps/
 │   ├── web/          # Next.js App Router, Tailwind, Radix-ready IDE console
-│   └── server/       # Node.js/TypeScript Langdock relay API
+│   └── server/       # Node.js/TypeScript Enterprise AI Gateway relay API
 ├── packages/
 │   ├── cli/          # Global gitrag binary exposed through package.json#bin
 │   └── sanitizer/    # Repo crawling and code-cleaning primitives
@@ -80,13 +80,13 @@ Run the web app:
 pnpm dev
 ```
 
-Run the Langdock relay server:
+Run the gateway relay server:
 
 ```bash
 pnpm dev:server
 ```
 
-## Langdock Configuration
+## Gateway Configuration
 
 Create an environment file for the server:
 
@@ -94,28 +94,28 @@ Create an environment file for the server:
 cp apps/server/.env.example apps/server/.env
 ```
 
-Set your Langdock Workspace API key:
+Set your Enterprise AI Gateway key:
 
 ```env
-LANGDOCK_API_KEY=LDK_your_workspace_api_key_here
-LANGDOCK_BASE_URL=https://api.langdock.com
+GITRAG_CORE_GATEWAY_KEY=your_gateway_key_here
+GITRAG_CORE_GATEWAY_URL=https://gateway.example.com
 GITRAG_SERVER_PORT=8787
 ```
 
-The `LANGDOCK_API_KEY` must only live in server-side `.env` files or deployment secrets. Do not expose it through `NEXT_PUBLIC_*` variables.
+The `GITRAG_CORE_GATEWAY_KEY` must only live in server-side `.env` files or deployment secrets. Do not expose it through `NEXT_PUBLIC_*` variables.
 
 ## Safety Architecture
 
 ```mermaid
 flowchart LR
   A["Developer Browser"] --> B["apps/web<br/>IDE-style Markdown console"]
-  B --> C["apps/server<br/>GitRAG Langdock relay"]
+  B --> C["apps/server<br/>GitRAG gateway relay"]
   C --> D["packages/sanitizer<br/>repo extraction policy"]
-  C --> E["Langdock API<br/>https://api.langdock.com"]
-  F["LANGDOCK_API_KEY<br/>server env only"] --> C
+  C --> E["Upstream Enterprise AI Gateway"]
+  F["GITRAG_CORE_GATEWAY_KEY<br/>server env only"] --> C
 ```
 
-GitRAG keeps browser traffic credential-free. The web app sends chat and repository intent to the local or hosted GitRAG server. The server loads `LANGDOCK_API_KEY`, applies route-level validation, calls Langdock, and streams responses back to the UI.
+GitRAG keeps browser traffic credential-free. The web app sends chat and repository intent to the local or hosted GitRAG server. The server loads `GITRAG_CORE_GATEWAY_KEY`, applies route-level validation, calls the upstream Enterprise AI Gateway, and streams responses back to the UI.
 
 ## CLI Preview
 

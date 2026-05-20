@@ -4,7 +4,7 @@
 
 **Goal:** Establish the GitRAG open-source monorepo with install scripts, workspace package boundaries, a minimal web shell, a server relay contract, a CLI package, and sanitizer primitives.
 
-**Architecture:** GitRAG uses pnpm workspaces with separate apps for the Next.js UI and Langdock relay server. Shared behavior lives in packages: `@gitrag/cli` owns the global `gitrag` binary and `@gitrag/sanitizer` owns repo filtering policy.
+**Architecture:** GitRAG uses pnpm workspaces with separate apps for the Next.js UI and secure gateway relay server. Shared behavior lives in packages: `@gitrag/cli` owns the global `gitrag` binary and `@gitrag/sanitizer` owns repo filtering policy.
 
 **Tech Stack:** pnpm, TypeScript, Next.js App Router, Tailwind CSS, Radix primitives, Fastify, zod, npm global shim linking.
 
@@ -71,16 +71,16 @@ Expose `gitrag` through `package.json#bin` with `--help`, `--version`, `doctor`,
 - Create: `apps/server/tsconfig.json`
 - Create: `apps/server/.env.example`
 - Create: `apps/server/src/index.ts`
-- Create: `apps/server/src/langdockRoutes.ts`
+- Create: `apps/server/src/gatewayRoutes.ts`
 - Create: `docs/architecture/api-routing-contract.md`
 
 - [x] **Step 1: Add Fastify server**
 
 Create `/health`, CORS setup, and environment-based port binding.
 
-- [x] **Step 2: Add Langdock Knowledge Folder relay route**
+- [x] **Step 2: Add Enterprise AI Gateway collection relay route**
 
-Validate payloads, read `LANGDOCK_API_KEY` server-side, forward to `LANGDOCK_BASE_URL`, and stream the upstream body.
+Validate payloads, read `GITRAG_CORE_GATEWAY_KEY` server-side, forward to `GITRAG_CORE_GATEWAY_URL`, and stream the upstream body.
 
 - [x] **Step 3: Document route contract**
 

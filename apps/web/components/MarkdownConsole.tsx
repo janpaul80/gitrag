@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { streamKnowledgeFolderQuery, type StreamMessage } from "../lib/langdockStream";
+import { streamCollectionQuery, type StreamMessage } from "../lib/gatewayStream";
 
 const initialMessages: StreamMessage[] = [
   {
@@ -18,9 +18,9 @@ const initialMessages: StreamMessage[] = [
 export function MarkdownConsole() {
   const [messages, setMessages] = useState<StreamMessage[]>(initialMessages);
   const [answer, setAnswer] = useState(
-    "GitRAG keeps Langdock credentials inside `apps/server`. Browser requests carry repo intent and chat payloads only; the relay injects the Workspace API key server-side."
+    "GitRAG keeps gateway credentials inside `apps/server`. Browser requests carry repo intent and chat payloads only; the relay injects the Enterprise AI Gateway key server-side."
   );
-  const [prompt, setPrompt] = useState("Explain the Langdock relay route.");
+  const [prompt, setPrompt] = useState("Explain the secure gateway relay route.");
   const [isStreaming, setIsStreaming] = useState(false);
 
   async function submitPrompt() {
@@ -30,9 +30,9 @@ export function MarkdownConsole() {
     setIsStreaming(true);
 
     try {
-      await streamKnowledgeFolderQuery({
+      await streamCollectionQuery({
         serverUrl: process.env.NEXT_PUBLIC_GITRAG_SERVER_URL ?? "http://localhost:8787",
-        folderId: process.env.NEXT_PUBLIC_GITRAG_KNOWLEDGE_FOLDER_ID ?? "local-dev",
+        collectionId: process.env.NEXT_PUBLIC_GITRAG_COLLECTION_ID ?? "local-dev",
         messages: nextMessages,
         onToken: (token) => setAnswer((current) => `${current}${token}`)
       });

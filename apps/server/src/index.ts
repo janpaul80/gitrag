@@ -1,7 +1,7 @@
 import "dotenv/config";
 import cors from "@fastify/cors";
 import Fastify from "fastify";
-import { registerLangdockRoutes } from "./langdockRoutes.js";
+import { registerGatewayRoutes } from "./gatewayRoutes.js";
 
 export async function buildServer() {
   const server = Fastify({
@@ -17,7 +17,7 @@ export async function buildServer() {
     service: "gitrag-server"
   }));
 
-  await registerLangdockRoutes(server);
+  await registerGatewayRoutes(server);
 
   return server;
 }

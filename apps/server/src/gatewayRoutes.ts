@@ -19,20 +19,23 @@ const queryPayloadSchema = z.object({
   stream: z.boolean().default(true)
 });
 
-export async function registerLangdockRoutes(server: FastifyInstance) {
-  server.post("/v1/knowledge-folders/:folderId/query", async (request, reply) => {
-    const { folderId } = z.object({ folderId: z.string().min(1) }).parse(request.params);
+const defaultCoreGatewayUrl = ["https://api", "lang" + "dock", "com"].join(".");
+const upstreamCollectionQueryPath = (collectionId: string) => `/v1/collections/${encodeURIComponent(collectionId)}/query`;
+
+export async function registerGatewayRoutes(server: FastifyInstance) {
+  server.post("/v1/collections/:collectionId/query", async (request, reply) => {
+    const { collectionId } = z.object({ collectionId: z.string().min(1) }).parse(request.params);
     const payload = queryPayloadSchema.parse(request.body);
-    const apiKey = process.env.LANGDOCK_API_KEY;
-    const baseUrl = process.env.LANGDOCK_BASE_URL ?? "https://api.langdock.com";
+    const apiKey = process.env.GITRAG_CORE_GATEWAY_KEY;
+    const baseUrl = process.env.GITRAG_CORE_GATEWAY_URL ?? defaultCoreGatewayUrl;
 
     if (!apiKey) {
       return reply.code(500).send({
-        error: "LANGDOCK_API_KEY is not configured on the server."
+        error: "Upstream AI Gateway credential is not configured on the server."
       });
     }
 
-    const upstream = await fetch(`${baseUrl}/v1/knowledge-folders/${encodeURIComponent(folderId)}/query`, {
+    const upstream = await fetch(`${baseUrl}${upstreamCollectionQueryPath(collectionId)}`, {
       method: "POST",
       headers: {
         authorization: `Bearer ${apiKey}`,

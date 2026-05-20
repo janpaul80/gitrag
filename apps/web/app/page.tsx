@@ -9,7 +9,7 @@ export default function Home() {
             <img src="/gitrag-logo.svg" alt="GitRAG" className="h-9 w-9" />
             <div>
               <h1 className="font-mono text-lg font-semibold tracking-normal">GitRAG</h1>
-              <p className="text-sm text-slate-400">Repo oracle via Langdock</p>
+              <p className="text-sm text-slate-400">Repo oracle via Enterprise AI Gateway</p>
             </div>
           </div>
           <div className="rounded border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 font-mono text-xs text-emerald-300">

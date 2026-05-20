@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "GitRAG",
-  description: "Open-source repo oracle powered by Langdock."
+  description: "Open-source repo oracle powered by a secure Enterprise AI Gateway Integration."
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

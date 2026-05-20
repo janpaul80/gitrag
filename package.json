@@ -2,7 +2,7 @@
   "name": "gitrag",
   "version": "0.1.0",
   "private": true,
-  "description": "GitRAG monorepo: an open-source repo oracle powered by Langdock.",
+  "description": "GitRAG monorepo: an open-source repo oracle powered by a secure Enterprise AI Gateway Integration.",
   "license": "MIT",
   "packageManager": "pnpm@11.1.2",
   "scripts": {
