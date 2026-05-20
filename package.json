@@ -10,6 +10,7 @@
     "dev": "pnpm --filter @gitrag/web dev",
     "dev:server": "pnpm --filter @gitrag/server dev",
     "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck"
   },
   "devDependencies": {
