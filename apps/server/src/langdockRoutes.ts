@@ -47,6 +47,9 @@ export async function registerLangdockRoutes(server: FastifyInstance) {
         reply.header(key, value);
       }
     });
+    reply.header("content-type", upstream.headers.get("content-type") ?? "text/event-stream");
+    reply.header("cache-control", "no-cache");
+    reply.header("connection", "keep-alive");
 
     if (!upstream.body) {
       return reply.send();

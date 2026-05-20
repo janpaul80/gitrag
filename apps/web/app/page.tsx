@@ -1,18 +1,4 @@
-const transcript = [
-  {
-    role: "system",
-    content: "Repository indexed. Sanitizer skipped lockfiles, media, generated output, and heavy binaries."
-  },
-  {
-    role: "user",
-    content: "Where does authentication enter the API layer?"
-  },
-  {
-    role: "assistant",
-    content:
-      "GitRAG will keep Langdock credentials inside apps/server. Browser requests carry repo intent and chat payloads only; the relay injects the Workspace API key server-side."
-  }
-];
+import { MarkdownConsole } from "../components/MarkdownConsole";
 
 export default function Home() {
   return (
@@ -42,27 +28,7 @@ export default function Home() {
             </nav>
           </aside>
 
-          <section className="flex min-h-[620px] flex-col overflow-hidden rounded border border-slate-800 bg-[#0f151c]">
-            <div className="flex items-center justify-between border-b border-slate-800 px-4 py-3">
-              <div className="font-mono text-sm text-slate-300">console://repo-oracle</div>
-              <div className="h-2 w-2 rounded-full bg-emerald-400" />
-            </div>
-            <div className="flex-1 space-y-4 overflow-auto p-4">
-              {transcript.map((item) => (
-                <article key={`${item.role}:${item.content}`} className="font-mono">
-                  <div className="mb-1 text-xs uppercase text-slate-500">{item.role}</div>
-                  <p className="max-w-3xl whitespace-pre-wrap text-sm leading-6 text-slate-200">{item.content}</p>
-                </article>
-              ))}
-            </div>
-            <div className="border-t border-slate-800 p-4">
-              <div className="flex items-center gap-2 rounded bg-[#0b0f14] px-3 py-3 font-mono text-sm text-slate-400">
-                <span className="text-cyan-300">&gt;</span>
-                <span>Ask GitRAG about this repository</span>
-                <span className="h-4 w-2 animate-pulse bg-cyan-300" />
-              </div>
-            </div>
-          </section>
+          <MarkdownConsole />
         </div>
       </section>
     </main>
