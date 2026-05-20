@@ -1,4 +1,4 @@
-import { MarkdownConsole } from "../components/MarkdownConsole";
+import { DashboardClient } from "../components/DashboardClient";
 
 export default function Home() {
   return (
@@ -17,19 +17,7 @@ export default function Home() {
           </div>
         </header>
 
-        <div className="grid flex-1 gap-5 py-5 lg:grid-cols-[280px_1fr]">
-          <aside className="border-r border-slate-800 pr-5">
-            <div className="font-mono text-xs uppercase text-slate-500">workspace</div>
-            <nav className="mt-4 space-y-2 font-mono text-sm text-slate-300">
-              <div className="rounded bg-slate-900 px-3 py-2 text-cyan-200">apps/web</div>
-              <div className="px-3 py-2">apps/server</div>
-              <div className="px-3 py-2">packages/cli</div>
-              <div className="px-3 py-2">packages/sanitizer</div>
-            </nav>
-          </aside>
-
-          <MarkdownConsole />
-        </div>
+        <DashboardClient />
       </section>
     </main>
   );

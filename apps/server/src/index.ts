@@ -1,5 +1,6 @@
 import "dotenv/config";
 import cors from "@fastify/cors";
+import multipart from "@fastify/multipart";
 import Fastify from "fastify";
 import { registerGatewayRoutes } from "./gatewayRoutes.js";
 
@@ -10,6 +11,11 @@ export async function buildServer() {
 
   await server.register(cors, {
     origin: true
+  });
+  await server.register(multipart, {
+    limits: {
+      fileSize: 500_000
+    }
   });
 
   server.get("/health", async () => ({
