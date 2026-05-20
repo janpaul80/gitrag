@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { streamCollectionQuery, type StreamMessage } from "../lib/gatewayStream";
+import { streamCollectionQuery, type StreamCitation, type StreamMessage } from "../lib/gatewayStream";
 
 const initialMessages: StreamMessage[] = [
   {
@@ -15,8 +15,9 @@ const initialMessages: StreamMessage[] = [
   }
 ];
 
-export function MarkdownConsole({ enabled }: { enabled: boolean }) {
+export function MarkdownConsole({ enabled, onCitationClick }: { enabled: boolean; onCitationClick?: (filePath: string) => void }) {
   const [messages, setMessages] = useState<StreamMessage[]>(initialMessages);
+  const [citations, setCitations] = useState<StreamCitation[]>([]);
   const [answer, setAnswer] = useState(
     "GitRAG keeps gateway credentials inside `apps/server`. Browser requests carry repo intent and chat payloads only; the relay injects the Enterprise AI Gateway key server-side."
   );
@@ -31,6 +32,7 @@ export function MarkdownConsole({ enabled }: { enabled: boolean }) {
     const nextMessages: StreamMessage[] = [...messages, { role: "user", content: prompt }];
     setMessages(nextMessages);
     setAnswer("");
+    setCitations([]);
     setIsStreaming(true);
 
     try {
@@ -38,7 +40,8 @@ export function MarkdownConsole({ enabled }: { enabled: boolean }) {
         serverUrl: process.env.NEXT_PUBLIC_GITRAG_SERVER_URL ?? "http://localhost:8787",
         collectionId: process.env.NEXT_PUBLIC_GITRAG_COLLECTION_ID ?? "local-dev",
         messages: nextMessages,
-        onToken: (token) => setAnswer((current) => `${current}${token}`)
+        onToken: (token) => setAnswer((current) => `${current}${token}`),
+        onCitations: setCitations
       });
     } catch (error) {
       setAnswer(error instanceof Error ? error.message : "GitRAG stream failed.");
@@ -74,6 +77,19 @@ export function MarkdownConsole({ enabled }: { enabled: boolean }) {
           >
             {answer}
           </ReactMarkdown>
+          {citations.length > 0 ? (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {citations.map((citation) => (
+                <button
+                  key={citation.filePath}
+                  className="rounded border border-slate-700 bg-slate-950 px-2 py-1 text-xs text-cyan-200"
+                  onClick={() => onCitationClick?.(citation.filePath)}
+                >
+                  📄 {citation.filePath}
+                </button>
+              ))}
+            </div>
+          ) : null}
         </article>
       </div>
       <div className="border-t border-slate-800 p-4">

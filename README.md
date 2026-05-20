@@ -126,6 +126,16 @@ gitrag sanitize ./my-repo
 gitrag sync ./my-repo --collection collection_123
 ```
 
+Doctor checks the local runtime before sync:
+
+```text
+✔ Node.js >= 18
+✔ Local GitRAG Relay Server Online
+✔ Gateway Environment Key Configured
+```
+
+Default sanitizer safety limits are 250 source files and 15MB of collective source content per sync. For large repositories, point GitRAG at a focused subfolder or tighten `.gitignore`.
+
 The first release will ship source installation. The public package roadmap targets:
 
 ```bash

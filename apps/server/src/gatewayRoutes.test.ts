@@ -2,6 +2,27 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { buildServer } from "./index.js";
 
+test("health reports gateway configuration status without exposing credentials", async () => {
+  const originalApiKey = process.env.GITRAG_CORE_GATEWAY_KEY;
+  process.env.GITRAG_CORE_GATEWAY_KEY = "gateway_test_key";
+
+  const server = await buildServer();
+  const response = await server.inject({
+    method: "GET",
+    url: "/health"
+  });
+
+  await server.close();
+  process.env.GITRAG_CORE_GATEWAY_KEY = originalApiKey;
+
+  assert.deepEqual(JSON.parse(response.body), {
+    ok: true,
+    service: "gitrag-server",
+    gatewayConfigured: true
+  });
+  assert.equal(response.body.includes("gateway_test_key"), false);
+});
+
 test("collection query proxies Enterprise AI Gateway SSE bytes without resolving JSON", async () => {
   const originalApiKey = process.env.GITRAG_CORE_GATEWAY_KEY;
   const originalBaseUrl = process.env.GITRAG_CORE_GATEWAY_URL;

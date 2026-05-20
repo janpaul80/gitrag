@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getIngestionStatus, type IngestionProgress } from "../lib/ingestionProgress";
 
 type ContextSidebarProps = {
   grounded: boolean;
+  highlightedFile?: string | null;
   onGrounded: () => void;
 };
 
-export function ContextSidebar({ grounded, onGrounded }: ContextSidebarProps) {
+export function ContextSidebar({ grounded, highlightedFile, onGrounded }: ContextSidebarProps) {
   const [repositoryUrl, setRepositoryUrl] = useState("");
   const [progress, setProgress] = useState<IngestionProgress>({
     phase: grounded ? "grounded" : "idle",
@@ -16,6 +17,17 @@ export function ContextSidebar({ grounded, onGrounded }: ContextSidebarProps) {
     syncedFiles: 0,
     totalFiles: 0
   });
+
+  useEffect(() => {
+    if (!highlightedFile) {
+      return;
+    }
+
+    document.getElementById(`file-${highlightedFile}`)?.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  }, [highlightedFile]);
 
   async function beginIngestion() {
     const totalFiles = repositoryUrl.trim().length > 0 ? 42 : 0;
@@ -55,6 +67,11 @@ export function ContextSidebar({ grounded, onGrounded }: ContextSidebarProps) {
         <div className="px-3 py-2">apps/server</div>
         <div className="px-3 py-2">packages/cli</div>
         <div className="px-3 py-2">packages/sanitizer</div>
+        {highlightedFile ? (
+          <div id={`file-${highlightedFile}`} className="rounded border border-cyan-400/40 bg-cyan-400/10 px-3 py-2 text-cyan-100">
+            {highlightedFile}
+          </div>
+        ) : null}
       </nav>
     </aside>
   );

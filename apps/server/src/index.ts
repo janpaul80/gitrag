@@ -20,7 +20,8 @@ export async function buildServer() {
 
   server.get("/health", async () => ({
     ok: true,
-    service: "gitrag-server"
+    service: "gitrag-server",
+    gatewayConfigured: Boolean(process.env.GITRAG_CORE_GATEWAY_KEY)
   }));
 
   await registerGatewayRoutes(server);

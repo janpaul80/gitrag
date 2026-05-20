@@ -3,6 +3,10 @@ export type StreamMessage = {
   content: string;
 };
 
+export type StreamCitation = {
+  filePath: string;
+};
+
 export type StreamCollectionQueryInput = {
   serverUrl: string;
   collectionId: string;
@@ -13,6 +17,7 @@ export type StreamCollectionQueryInput = {
     sanitizedFiles?: string[];
   };
   onToken: (token: string) => void;
+  onCitations?: (citations: StreamCitation[]) => void;
 };
 
 export async function streamCollectionQuery(input: StreamCollectionQueryInput): Promise<void> {
@@ -51,14 +56,18 @@ export async function streamCollectionQuery(input: StreamCollectionQueryInput): 
     }
 
     buffered += decoder.decode(value, { stream: true });
-    buffered = emitCompleteSseFrames(buffered, input.onToken);
+    buffered = emitCompleteSseFrames(buffered, input.onToken, input.onCitations);
   }
 
   buffered += decoder.decode();
-  emitCompleteSseFrames(`${buffered}\n\n`, input.onToken);
+  emitCompleteSseFrames(`${buffered}\n\n`, input.onToken, input.onCitations);
 }
 
-function emitCompleteSseFrames(buffered: string, onToken: (token: string) => void): string {
+function emitCompleteSseFrames(
+  buffered: string,
+  onToken: (token: string) => void,
+  onCitations?: (citations: StreamCitation[]) => void
+): string {
   const frames = buffered.split(/\n\n/);
   const remainder = frames.pop() ?? "";
 
@@ -69,10 +78,29 @@ function emitCompleteSseFrames(buffered: string, onToken: (token: string) => voi
       .map((line) => line.slice(5).trimStart())
       .join("\n");
 
-    if (token.length > 0 && token !== "[DONE]") {
+    const citations = parseCitationToken(token);
+    if (citations.length > 0) {
+      onCitations?.(citations);
+    } else if (token.length > 0 && token !== "[DONE]") {
       onToken(token);
     }
   }
 
   return remainder;
+}
+
+export function parseCitationToken(token: string): StreamCitation[] {
+  try {
+    const parsed = JSON.parse(token) as {
+      citations?: Array<Record<string, unknown>>;
+      sources?: Array<Record<string, unknown>>;
+    };
+    const sourceItems = parsed.citations ?? parsed.sources ?? [];
+    return sourceItems
+      .map((item) => item.filePath ?? item.path ?? item.filename)
+      .filter((filePath): filePath is string => typeof filePath === "string" && filePath.length > 0)
+      .map((filePath) => ({ filePath }));
+  } catch {
+    return [];
+  }
 }

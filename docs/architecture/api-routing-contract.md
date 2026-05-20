@@ -29,9 +29,12 @@ Response:
 ```json
 {
   "ok": true,
-  "service": "gitrag-server"
+  "service": "gitrag-server",
+  "gatewayConfigured": true
 }
 ```
+
+`gatewayConfigured` is a boolean only. The relay never returns the configured credential value.
 
 ### `POST /v1/collections/:collectionId/query`
 
@@ -64,6 +67,16 @@ client request
   -> read GITRAG_CORE_GATEWAY_KEY from server env
   -> POST upstream collection query endpoint
   -> stream upstream response to client
+```
+
+Citation handling:
+
+```text
+upstream final stream chunk
+  -> JSON payload with citations or sources metadata
+  -> browser parser extracts filePath/path/filename aliases
+  -> console renders clickable file pills below the assistant answer
+  -> clicking a pill scrolls the context tree to the cited file
 ```
 
 Error responses:
@@ -153,6 +166,40 @@ local path
   -> post multipart files to http://localhost:8787/v1/collections/:collectionId/files
   -> print one terminal progress line per queued source file
 ```
+
+Doctor command:
+
+```bash
+gitrag doctor
+```
+
+Doctor verifies:
+
+```text
+Node.js >= 18
+Local GitRAG relay server /health availability
+Server-side gateway environment initialization
+```
+
+Example output:
+
+```text
+✔ Node.js >= 18
+✔ Local GitRAG Relay Server Online
+✔ Gateway Environment Key Configured
+```
+
+## Sanitizer Limits
+
+Default sync safety ceilings:
+
+```text
+single file cap: 500KB
+source file cap: 250 files
+collective source cap: 15MB
+```
+
+When a repository crosses these thresholds, GitRAG throws a descriptive `RepositoryLimitError` instructing the user to configure a targeted `.gitignore` or pass an explicit subfolder pathway scope.
 
 ## Planned Route Extensions
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { sanitizeRepositoryPlan } from "@gitrag/sanitizer";
+import { runDoctor } from "./doctor.js";
 import { syncRepository } from "./sync.js";
 
 const version = "0.1.0";
@@ -28,8 +29,9 @@ if (command === "--version" || command === "-v") {
 }
 
 if (command === "doctor") {
-  console.log("GitRAG doctor: Node.js and CLI entrypoint are available.");
-  process.exit(0);
+  const result = await runDoctor();
+  console.log(result.lines.join("\n"));
+  process.exit(result.ok ? 0 : 1);
 }
 
 if (command === "sanitize") {

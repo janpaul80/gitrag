@@ -21,12 +21,16 @@ export type RepositoryPack = {
 
 export type PackRepositoryOptions = {
   maxFileBytes?: number;
+  maxSourceFiles?: number;
+  maxTotalBytes?: number;
 };
 
 export type SanitizerPlan = {
   rootPath: string;
   ignoredGlobs: string[];
   maxFileBytes: number;
+  maxSourceFiles: number;
+  maxTotalBytes: number;
 };
 
 const defaultIgnoredGlobs = [
@@ -46,6 +50,16 @@ const defaultIgnoredGlobs = [
 ];
 
 const defaultMaxFileBytes = 500_000;
+const defaultMaxSourceFiles = 250;
+const defaultMaxTotalBytes = 15_000_000;
+
+export class RepositoryLimitError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "RepositoryLimitError";
+    Object.setPrototypeOf(this, RepositoryLimitError.prototype);
+  }
+}
 
 const languageByExtension = new Map<string, string>([
   [".cjs", "javascript"],
@@ -73,16 +87,21 @@ export function sanitizeRepositoryPlan(rootPath: string): SanitizerPlan {
   return {
     rootPath,
     ignoredGlobs: defaultIgnoredGlobs,
-    maxFileBytes: defaultMaxFileBytes
+    maxFileBytes: defaultMaxFileBytes,
+    maxSourceFiles: defaultMaxSourceFiles,
+    maxTotalBytes: defaultMaxTotalBytes
   };
 }
 
 export async function packRepository(rootPath: string, options: PackRepositoryOptions = {}): Promise<RepositoryPack> {
   const maxFileBytes = options.maxFileBytes ?? defaultMaxFileBytes;
+  const maxSourceFiles = options.maxSourceFiles ?? defaultMaxSourceFiles;
+  const maxTotalBytes = options.maxTotalBytes ?? defaultMaxTotalBytes;
   const ignored: IgnoredFile[] = [];
   const matcher = ignore().add(defaultIgnoredGlobs).add(await readGitignorePatterns(rootPath));
   const candidateFiles = await walkFiles(rootPath);
   const files: SanitizedFile[] = [];
+  let totalBytes = 0;
 
   for (const absolutePath of candidateFiles) {
     const filePath = toRepositoryPath(relative(rootPath, absolutePath));
@@ -98,8 +117,15 @@ export async function packRepository(rootPath: string, options: PackRepositoryOp
       continue;
     }
 
+    if (files.length + 1 > maxSourceFiles || totalBytes + fileStat.size > maxTotalBytes) {
+      throw new RepositoryLimitError(
+        `Repository exceeds GitRAG sync limits. configure a targeted .gitignore or pass an explicit subfolder pathway scope to trim down the crawl zone.`
+      );
+    }
+
     try {
       const content = normalizeContent(await readFile(absolutePath, "utf8"));
+      totalBytes += fileStat.size;
       files.push({
         filePath,
         language: detectLanguage(filePath),
