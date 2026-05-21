@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #000000;
+  color: #fafafa;
+  font-family: var(--font-geist-sans), Inter, Arial, sans-serif;
+}
+
+::selection {
+  background: #ffffff;
+  color: #000000;
+}
+
+.text-balance {
+  text-wrap: balance;
+}

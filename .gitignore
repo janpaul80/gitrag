@@ -12,6 +12,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .next-dev.*.log
+.docs-dev.*.log
+.playwright-cli/
 *.tsbuildinfo
 Thumbs.db
 .DS_Store
