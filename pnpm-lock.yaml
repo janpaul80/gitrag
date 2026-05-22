@@ -126,7 +126,7 @@ importers:
   packages/cli:
     dependencies:
       '@gitrag/sanitizer':
-        specifier: workspace:*
+        specifier: file:../sanitizer
         version: link:../sanitizer
     devDependencies:
       tsx:

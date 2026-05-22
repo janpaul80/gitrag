@@ -36,8 +36,11 @@ fi
 
 cd "$INSTALL_DIR"
 pnpm install
-pnpm build
-npm link ./packages/cli
+pnpm --filter @gitrag/cli... build
+(
+  cd ./packages/cli
+  npm link --ignore-scripts
+)
 
 gitrag --version
 echo "GitRAG installed. Run 'gitrag --help' to get started."

@@ -17,7 +17,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@gitrag/sanitizer": "workspace:*"
+    "@gitrag/sanitizer": "file:../sanitizer"
   },
   "devDependencies": {
     "tsx": "^4.19.4"
