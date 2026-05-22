@@ -38,8 +38,10 @@ if (Test-Path (Join-Path $InstallDir ".git")) {
 
 Set-Location $InstallDir
 pnpm install
-pnpm build
-npm link .\packages\cli
+pnpm --filter @gitrag/cli... build
+Push-Location .\packages\cli
+npm link --ignore-scripts
+Pop-Location
 
 gitrag --version
 Write-Host "GitRAG installed. Run 'gitrag --help' to get started."
