@@ -14,6 +14,16 @@
 
 ---
 
+## Demo
+
+<video src="apps/docs/public/media/gitrag-media01.mp4" controls poster="apps/docs/public/media/gitrag-install-01.png" width="100%">
+  Watch the GitRAG installer demo.
+</video>
+
+| Installer progress | Successful install |
+| --- | --- |
+| ![GitRAG installer downloading and building packages](apps/docs/public/media/gitrag-install-01.png) | ![GitRAG installer finishing and exposing the gitrag command](apps/docs/public/media/gitrag-install-02.png) |
+
 ## What GitRAG Is
 
 GitRAG turns a local or remote source repository into a safe, queryable context layer for Enterprise AI Gateway-backed coding models. It crawls a repo, removes noisy or unsafe files, sends sanitized code context through a server-side gateway relay, and renders answers in an IDE-style chat console.

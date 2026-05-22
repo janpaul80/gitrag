@@ -21,6 +21,9 @@ export default function Home() {
             <a className="transition hover:text-white" href="#install">
               Install
             </a>
+            <a className="transition hover:text-white" href="#demo">
+              Demo
+            </a>
             <a className="transition hover:text-white" href="#architecture">
               Architecture
             </a>
@@ -55,6 +58,47 @@ export default function Home() {
           </div>
         </div>
         <TerminalSimulator />
+      </section>
+
+      <section id="demo" className="border-y border-zinc-900 bg-[#0A0A0A]">
+        <div className="mx-auto max-w-6xl px-6 py-20">
+          <div className="max-w-2xl">
+            <h2 className="text-3xl font-semibold tracking-[-0.02em] text-white md:text-4xl">Source install, end to end.</h2>
+            <p className="mt-4 text-base leading-7 text-zinc-500">
+              A real terminal capture of the one-line installer cloning GitRAG, building the CLI packages, and exposing the global `gitrag` command.
+            </p>
+          </div>
+
+          <div className="mt-10 overflow-hidden rounded-lg border border-zinc-800 bg-black shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+            <video
+              className="aspect-video w-full bg-black object-cover"
+              src="/media/gitrag-media01.mp4"
+              poster="/media/gitrag-install-01.png"
+              controls
+              playsInline
+              preload="metadata"
+            />
+          </div>
+
+          <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <figure className="overflow-hidden rounded-lg border border-zinc-900 bg-black">
+              <img
+                className="aspect-video w-full object-cover"
+                src="/media/gitrag-install-01.png"
+                alt="GitRAG installer downloading dependencies and building source packages"
+              />
+              <figcaption className="border-t border-zinc-900 px-4 py-3 font-mono text-xs text-zinc-500">Installer progress</figcaption>
+            </figure>
+            <figure className="overflow-hidden rounded-lg border border-zinc-900 bg-black">
+              <img
+                className="aspect-video w-full object-cover"
+                src="/media/gitrag-install-02.png"
+                alt="GitRAG installer finishing successfully and exposing the global command"
+              />
+              <figcaption className="border-t border-zinc-900 px-4 py-3 font-mono text-xs text-zinc-500">Global CLI ready</figcaption>
+            </figure>
+          </div>
+        </div>
       </section>
 
       <section id="architecture" className="border-y border-zinc-900 bg-[#0A0A0A]">
