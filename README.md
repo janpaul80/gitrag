@@ -152,6 +152,8 @@ The first release will ship source installation. The public package roadmap targ
 npm install -g @gitrag/cli
 ```
 
+MIT License
+
 ## Status
 
 GitRAG is in initial scaffold. The monorepo, installer path, CLI boundary, server boundary, sanitizer package, and web application shell are established.
